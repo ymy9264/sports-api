@@ -19,3 +19,4 @@ Route::get('api/matches', 'Matches/index');
 Route::get('api/players', 'Players/index');
 Route::get('api/teams', 'Teams/index');
 
+Route::post('api/matches','Matches/save');
