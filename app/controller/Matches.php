@@ -26,7 +26,26 @@ class Matches extends BaseController
             'status'=>$status
         );
         $insert = Db::table('match')->insert($db_data);
-        $db_status = $insert ? 1 : 0;
+        $db_status = $insert ? 0 : 1;
+
+        $return = array('code'=>$db_status);
+        return json($return);
+    }
+
+    public function update(Request $request){
+        $id = $request->param('id');
+        $name = $request->param('name');
+        $team = $request->param('team');
+        $time = $request->param('time');
+        $status = $request->param('status');
+        $db_data = array(
+            'name'=>$name,
+            'team'=>$team,
+            'time'=>$time,
+            'status'=>$status
+        );
+        $insert = Db::table('match')->where('id',$id)->update($db_data);
+        $db_status = $insert ? 0 : 1;
 
         $return = array('code'=>$db_status);
         return json($return);
