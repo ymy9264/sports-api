@@ -44,10 +44,20 @@ class Matches extends BaseController
             'time'=>$time,
             'status'=>$status
         );
-        $insert = Db::table('match')->where('id',$id)->update($db_data);
-        $db_status = $insert ? 0 : 1;
+        $update = Db::table('match')->where('id',$id)->update($db_data);
+        $db_status = $update ? 0 : 1;
 
         $return = array('code'=>$db_status);
         return json($return);
+    }
+
+    public function delete(Request $request){
+        $id = $request->param('id');
+        $delete = Db::table('match')->where('id',$id)->delete();
+        $db_status = $delete ? 0 : 1;
+
+        $return = array('code'=>$db_status);
+        return json($return);
+
     }
 }
