@@ -32,3 +32,6 @@ Route::post('api/teams/update','Teams/update');
 Route::post('api/teams/delete','Teams/delete');
 
 Route::post('api/login','Auth/login');
+
+Route::get('api/dataCrawler/matches', 'dataCrawler/matches');
+
