@@ -30,3 +30,5 @@ Route::post('api/players/delete','Players/delete');
 Route::post('api/teams/save','Teams/save');
 Route::post('api/teams/update','Teams/update');
 Route::post('api/teams/delete','Teams/delete');
+
+Route::post('api/login','Auth/login');
