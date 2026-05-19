@@ -52,7 +52,8 @@ class dataCrawler extends BaseController
     }
 
     function matches(){
-        $url = 'https://bf.titan007.com/football/Over_20260514.htm';
+        $date = date('Ymd');
+        $url = 'https://bf.titan007.com/football/Over_'.$date.'.htm';
         $content = $this->https_request($url);
 
         echo mb_detect_encoding(
@@ -105,8 +106,13 @@ class dataCrawler extends BaseController
                 }
             }
         });
+    }
 
+    function players(){
 
+    }
+
+    function teams(){
 
     }
 }

@@ -27,7 +27,8 @@
       "ext-curl": "*",
         "guzzlehttp/guzzle": "^7.10",
         "symfony/dom-crawler": "^7.4",
-        "symfony/css-selector": "^7.4"
+        "symfony/css-selector": "^7.4",
+        "firebase/php-jwt": "^7.0"
     },
     "require-dev": {
         "symfony/var-dumper": "^4.2",

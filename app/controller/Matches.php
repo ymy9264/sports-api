@@ -10,7 +10,10 @@ use think\facade\Db;
 class Matches extends BaseController
 {
     public function index(){
-        $db_data = Db::table('match')->select();
+
+        $db_data = Db::table('match')
+            ->join('league','match.name=league.name')
+            ->select();
         return json($db_data);
     }
 
