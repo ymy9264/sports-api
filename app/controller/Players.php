@@ -8,25 +8,39 @@ use think\facade\Db;
 
 class Players extends BaseController
 {
-    public function index(){
-        $db_data = Db::table('player')->select();
-        return json($db_data);
+    public function index(Request $request){
+        $page = $request->param('page',1);
+        $pageSize = $request->param('pageSize',20);
+
+        $keyword = $request->param('keyword', '');
+        $query = Db::table('player');
+
+        if ($keyword) {
+            $query = $query->whereLike('name', "%$keyword%")
+                ->whereOr('position', 'like', "%$keyword%")
+                ->whereOr('nationality', 'like', "%$keyword%")
+                ->whereOr('team', 'like', "%$keyword%");
+        }
+
+        $total = $query->count();
+        $list = $query->page($page, $pageSize)->select();
+        return json(['total'=>$total,'list'=>$list]);
     }
 
     public function save(Request $request){
         $name = $request->param('name');
         $team = $request->param('team');
-        $time = $request->param('position');
-        $status = $request->param('number');
+        $position = $request->param('position');
+        $number = $request->param('number');
         $nation = $request->param('nationality');
-        $age = $request->param('age');
+        $birthday = $request->param('birthday');
         $db_data = array(
             'name'=>$name,
             'team'=>$team,
-            'time'=>$time,
-            'status'=>$status,
+            'position'=>$position,
+            'number'=>$number,
             'nationality'=>$nation,
-            'age'=>$age
+            'birthday'=>$birthday
         );
         $insert = Db::table('player')->insert($db_data);
         $db_status = $insert ? 0 : 1;
@@ -39,17 +53,17 @@ class Players extends BaseController
         $id = $request->param('id');
         $name = $request->param('name');
         $team = $request->param('team');
-        $time = $request->param('position');
-        $status = $request->param('number');
+        $position = $request->param('position');
+        $number = $request->param('number');
         $nation = $request->param('nationality');
-        $age = $request->param('age');
+        $birthday = $request->param('birthday');
         $db_data = array(
             'name'=>$name,
             'team'=>$team,
-            'time'=>$time,
-            'status'=>$status,
+            'position'=>$position,
+            'number'=>$number,
             'nationality'=>$nation,
-            'age'=>$age
+            'birthday'=>$birthday
         );
         $update = Db::table('player')->where('id',$id)->update($db_data);
         $db_status = $update ? 0 : 1;

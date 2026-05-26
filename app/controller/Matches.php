@@ -9,12 +9,24 @@ use think\facade\Db;
 
 class Matches extends BaseController
 {
-    public function index(){
+    public function index(Request $request){
+        $page = $request->param('page',1);
+        $pageSize = $request->param('pageSize',20);
 
-        $db_data = Db::table('match')
-            ->join('league','match.name=league.name')
-            ->select();
-        return json($db_data);
+        $keyword = $request->param('keyword', '');
+        $query = Db::table('matches')
+            ->where('league.is_main',1)
+            ->join('league','matches.name=league.name');
+
+        if ($keyword) {
+            $query = $query->whereLike('league.name', "%$keyword%")
+                ->whereOr('home_team', 'like', "%$keyword%")
+                ->whereOr('visit_team', 'like', "%$keyword%");
+        }
+
+        $total = $query->count();
+        $list = $query->field('matches.*')->page($page, $pageSize)->select();
+        return json(['total'=>$total,'list'=>$list]);
     }
 
     public function save(Request $request){
@@ -28,7 +40,7 @@ class Matches extends BaseController
             'time'=>$time,
             'status'=>$status
         );
-        $insert = Db::table('match')->insert($db_data);
+        $insert = Db::table('matches')->insert($db_data);
         $db_status = $insert ? 0 : 1;
 
         $return = array('code'=>$db_status);
@@ -47,7 +59,7 @@ class Matches extends BaseController
             'time'=>$time,
             'status'=>$status
         );
-        $update = Db::table('match')->where('id',$id)->update($db_data);
+        $update = Db::table('matches')->where('id',$id)->update($db_data);
         $db_status = $update ? 0 : 1;
 
         $return = array('code'=>$db_status);
@@ -56,7 +68,7 @@ class Matches extends BaseController
 
     public function delete(Request $request){
         $id = $request->param('id');
-        $delete = Db::table('match')->where('id',$id)->delete();
+        $delete = Db::table('matches')->where('id',$id)->delete();
         $db_status = $delete ? 0 : 1;
 
         $return = array('code'=>$db_status);

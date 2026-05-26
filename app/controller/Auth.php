@@ -21,11 +21,11 @@ class Auth extends BaseController
 
         if($login_check){
             $permissions = Db::table('permission')->where('user_id',$login_check['id'])->column('module');
-
+            $type = $login_check['type'];
             $payload = [
                 'id' => $login_check['id'],
                 'username' => $login_check['username'],
-                'type' => $login_check['type'],
+                'type' => $type,
                 'exp' => time() + 86400  // 24小时过期
             ];
             $code = 0;
@@ -38,7 +38,7 @@ class Auth extends BaseController
             $type = '';
         }
 
-        $res = array('code'=>$code,'token'=>$token,'permissions'=>$permissions,'type'=>$login_check['type']);
+        $res = array('code'=>$code,'token'=>$token,'permissions'=>$permissions,'type'=>$type);
         return json($res);
     }
 }
