@@ -43,9 +43,9 @@ Route::group('', function() {
     Route::post('api/users/toggle','User/toggle');
 
 })->middleware(\app\middleware\Auth::class);
-Route::get('api/dataCrawler/teams', 'dataCrawler/teams');
-Route::get('api/dataCrawler/matches', 'dataCrawler/matches');
-Route::get('api/dataCrawler/players', 'dataCrawler/players');
+Route::get('api/DataCrawler/teams', 'DataCrawler/teams');
+Route::get('api/DataCrawler/matches', 'DataCrawler/matches');
+Route::get('api/DataCrawler/players', 'DataCrawler/players');
 Route::get('api/Dashboard', 'Dashboard/index');
 Route::post('api/login','Auth/login');
 

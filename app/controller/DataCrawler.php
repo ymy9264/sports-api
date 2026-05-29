@@ -6,7 +6,7 @@ use app\BaseController;
 use think\facade\Db;
 use Symfony\Component\DomCrawler\Crawler;
 
-class dataCrawler extends BaseController
+class DataCrawler extends BaseController
 {
     private function https_request($url, $data=null, $time=600, $referer='',$cookie=''){
         $curl_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36';

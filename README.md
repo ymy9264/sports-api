@@ -53,4 +53,4 @@ Authorization: Bearer <token>
 | 球队 | GET/POST /api/teams |
 | 球员 | GET/POST /api/players |
 | 用户 | GET/POST /api/users |
-| 数据采集 | GET /api/dataCrawler/matches |
+| 数据采集 | GET /api/DataCrawler/matches |
