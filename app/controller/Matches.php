@@ -31,14 +31,16 @@ class Matches extends BaseController
 
     public function save(Request $request){
         $name = $request->param('name');
-        $team = $request->param('team');
-        $time = $request->param('time');
-        $status = $request->param('status');
+        $home_team = $request->param('home_team');
+        $visit_team = $request->param('visit_team');
+        $match_time = $request->param('match_time');
+        $score = $request->param('score');
         $db_data = array(
             'name'=>$name,
-            'team'=>$team,
-            'time'=>$time,
-            'status'=>$status
+            'home_team'=>$home_team,
+            'visit_team'=>$visit_team,
+            'match_time'=>$match_time,
+            'score'=>$score
         );
         $insert = Db::table('matches')->insert($db_data);
         $db_status = $insert ? 0 : 1;
