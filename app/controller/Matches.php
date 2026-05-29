@@ -50,14 +50,17 @@ class Matches extends BaseController
     public function update(Request $request){
         $id = $request->param('id');
         $name = $request->param('name');
-        $team = $request->param('team');
-        $time = $request->param('time');
-        $status = $request->param('status');
+        $home_team = $request->param('home_team');
+        $visit_team = $request->param('visit_team');
+        $match_time = $request->param('match_time');
+        $score = $request->param('score');
+
         $db_data = array(
             'name'=>$name,
-            'team'=>$team,
-            'time'=>$time,
-            'status'=>$status
+            'home_team'=>$home_team,
+            'visit_team'=>$visit_team,
+            'match_time'=>$match_time,
+            'score'=>$score
         );
         $update = Db::table('matches')->where('id',$id)->update($db_data);
         $db_status = $update ? 0 : 1;
