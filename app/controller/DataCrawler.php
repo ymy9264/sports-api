@@ -54,7 +54,12 @@ class DataCrawler extends BaseController
         $url = 'https://bf.titan007.com/football/Over_'.$date.'.htm';
         $content = $this->https_request($url);
 
-       // $content = mb_convert_encoding($content, 'UTF-8', 'GBK,GB2312,BIG5,UTF-8');
+        echo mb_detect_encoding(
+            $content,
+            ['UTF-8', 'GBK', 'GB2312', 'BIG5'],
+            true
+        );
+        // $content = mb_convert_encoding($content, 'UTF-8', 'GBK,GB2312,BIG5,UTF-8');
         $crawler = new Crawler($content);
         $crawler->filter('#table_live tr')->each(function ($node, $i) {
             if($i == 0){
@@ -162,55 +167,55 @@ class DataCrawler extends BaseController
 
         }
 
-    function teams(){
-        set_time_limit(0);
-        $league = Db::table('league')->where('is_main',1)->select();
-        foreach($league as $league_row) {
+        function teams(){
+            set_time_limit(0);
+            $league = Db::table('league')->where('is_main',1)->select();
+            foreach($league as $league_row) {
 
-            $league_name = $league_row['name'];
-            $qt_id = $league_row['qt_id'];
-            $sub_id = $league_row['sub_id'];
-            if ($sub_id === 0 || $sub_id === $qt_id) {
-                $url = 'https://zq.titan007.com/jsData/matchResult/2025-2026/s' . $qt_id . '.js?version=2026052115';
-            } else {
-                $url = 'https://zq.titan007.com/jsData/matchResult/2025-2026/s' . $qt_id . '_' . $sub_id . '.js?version=2026052115';
-            }
-            $content = https_request($url);
-            $content = mb_convert_encoding($content, 'UTF-8', 'GBK,GB2312,BIG5,UTF-8');
-            echo $content;
-            if (!strpos($content, 'var arrTeam = [')) {
-                continue;
-            }
-            $content = explode('];', $content);
-
-            dump($content);
-            if ($sub_id === $qt_id) {
-                $teams = $content[1] . ']';
-            } else {
-                $teams = $content[2] . ']';
-            }
-            $teams = str_replace('var arrTeam =', '', $teams);
-            $teams = str_replace("'", '"', $teams);
-            $team_list = json_decode($teams, true);
-            if (!$team_list) {
-                continue;
-            }
-            foreach ($team_list as $team_item) {
-
-                $db_data = array(
-                    'team_id' => $team_item[0],
-                    'team_cn' => $team_item[1],
-                    'team_en' => $team_item[3],
-                    'league' => $league_name
-                );
-                $check = Db::table('team')->where('team_id', $team_item[0])->find();
-                if ($check) {
-                    Db::table('team')->where('team_id', $team_item[0])->update($db_data);
+                $league_name = $league_row['name'];
+                $qt_id = $league_row['qt_id'];
+                $sub_id = $league_row['sub_id'];
+                if ($sub_id === 0 || $sub_id === $qt_id) {
+                    $url = 'https://zq.titan007.com/jsData/matchResult/2025-2026/s' . $qt_id . '.js?version=2026052115';
                 } else {
-                    Db::table('team')->insert($db_data);
+                    $url = 'https://zq.titan007.com/jsData/matchResult/2025-2026/s' . $qt_id . '_' . $sub_id . '.js?version=2026052115';
+                }
+                $content = https_request($url);
+                $content = mb_convert_encoding($content, 'UTF-8', 'GBK,GB2312,BIG5,UTF-8');
+                echo $content;
+                if (!strpos($content, 'var arrTeam = [')) {
+                    continue;
+                }
+                $content = explode('];', $content);
+
+                dump($content);
+                if ($sub_id === $qt_id) {
+                    $teams = $content[1] . ']';
+                } else {
+                    $teams = $content[2] . ']';
+                }
+                $teams = str_replace('var arrTeam =', '', $teams);
+                $teams = str_replace("'", '"', $teams);
+                $team_list = json_decode($teams, true);
+                if (!$team_list) {
+                    continue;
+                }
+                foreach ($team_list as $team_item) {
+
+                    $db_data = array(
+                        'team_id' => $team_item[0],
+                        'team_cn' => $team_item[1],
+                        'team_en' => $team_item[3],
+                        'league' => $league_name
+                    );
+                    $check = Db::table('team')->where('team_id', $team_item[0])->find();
+                    if ($check) {
+                        Db::table('team')->where('team_id', $team_item[0])->update($db_data);
+                    } else {
+                        Db::table('team')->insert($db_data);
+                    }
                 }
             }
-        }
 
 
         }
