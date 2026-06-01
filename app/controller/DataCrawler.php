@@ -54,11 +54,6 @@ class DataCrawler extends BaseController
         $url = 'https://bf.titan007.com/football/Over_'.$date.'.htm';
         $content = $this->https_request($url);
 
-        echo mb_detect_encoding(
-            $content,
-            ['UTF-8', 'GBK', 'GB2312', 'BIG5'],
-            true
-        );
        // $content = mb_convert_encoding($content, 'UTF-8', 'GBK,GB2312,BIG5,UTF-8');
         $crawler = new Crawler($content);
         $crawler->filter('#table_live tr')->each(function ($node, $i) {
@@ -85,7 +80,17 @@ class DataCrawler extends BaseController
                 }
                 $match_time = str_replace('日', ' ', $match_time); // "24 10:40"
 
-                $match_time = date('Y-m').'-'.$match_time.':00';
+                $pageDate = date('Y-m', strtotime('-1 day'));
+                $match_time = $pageDate.'-'.$match_time.':00';
+                $timestamp = strtotime($match_time);
+
+                if (
+                    $timestamp === false ||
+                    date('Y-m-d H:i:s', $timestamp) !== $match_time
+                ) {
+                    echo "非法时间：".$match_time.PHP_EOL;
+                    return;
+                }
                 $update = date('Y-m-d H:i:s');
                 $info = array(
                     'qt_match_id'=>$qt_match_id,
